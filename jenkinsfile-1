@@ -6,16 +6,24 @@ pipeline {
     stages {
         stage('Checkout git') {
             steps {
-                git branch: 'master', url: 'https://github.com/kumarkaranam1/frogger_game_project'
+               git branch: 'master', url: 'https://github.com/kumarkaranam1/frogger_game_project'
             }
         }
         
         stage ('Build') {
             steps {
-                sh 'mvn clean verify sonar:sonar \
-                -Dsonar.projectKey=froggergameproject-key \
-                -Dsonar.host.url=http://localhost:9000 \
-                -Dsonar.login=sqp_45586742b42e89ecc5052b8331417c9b6c4b387f'
+                sh 'mvn install' 
+            }
+        }
+        
+        stage('SonarQube Analysis'){
+            steps{
+                   withSonarQubeEnv('sonarqube') {
+                        sh 'mvn clean verify sonar:sonar \
+                       -Dsonar.projectKey=froggergameproject-key \
+                       -Dsonar.host.url=http://localhost:9000 \
+                       -Dsonar.login=sqp_45586742b42e89ecc5052b8331417c9b6c4b387f'
+                    }
             }
         }
     }
