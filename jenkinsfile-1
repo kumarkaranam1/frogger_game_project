@@ -10,17 +10,11 @@ pipeline {
             }
         }
         
-        stage ('Build & JUnit Test') {
+        stage ('Build') {
             steps {
                 sh 'mvn install' 
             }
-            post {
-               success {
-                    junit 'target/surefire-reports/**/*.xml'
-                }   
-            }
-        }
-        stage('SonarQube Analysis'){
+            stage('SonarQube Analysis'){
             steps{
                    withSonarQubeEnv('sonarqube') {
                         sh 'mvn clean verify sonar:sonar \
@@ -29,8 +23,9 @@ pipeline {
                        -Dsonar.login=sqp_45586742b42e89ecc5052b8331417c9b6c4b387f'
 
 
-                    }
+                 }
             }
         }
         }
     }
+}
